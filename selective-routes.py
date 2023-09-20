@@ -1,7 +1,8 @@
 """
 NOTE: 
-Test file bgp-lu-command-1.txt corresponds to show bgp nexthops WITH the LU route installed in the RIB.
-Test file bgp-lu-command-2.txt corresponds to show bgp nexthops WITHOUT the LU route installed in the RIB.
+Test file bgp-lu-command-1.txt -> show bgp nexthops -> WITH the LU route installed in the RIB.
+Test file bgp-lu-command-2.txt -> show bgp nexthops -> WITHOUT the LU route installed in the RIB [no BGP vpnv4 advertisement]
+Test file bgp-lu-command-3.txt -> show bgp nexthops -> WITHOUT the LU route installed in the RIB [BGP vpnv4 advertisement but the LU route is rejected due to RPL (table-policy)]
 """
 
 test_flag = False
@@ -21,7 +22,7 @@ def getCLI():
         if result['status'] == 'success':
             return result['output']
     else:
-        return open('test-cli-outputs/bgp-lu-command-2.txt').read()
+        return open('test-cli-outputs/bgp-lu-command-3.txt').read()
     
 if __name__ == '__main__':
     print(getCLI())
