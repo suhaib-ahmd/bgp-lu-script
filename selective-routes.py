@@ -19,9 +19,10 @@ except:
 
 def getCLI():
     if test_flag == False:
-        result = cli_helper.xrcli_exec("show bgp nexthops")
-        if result['status'] == 'success':
-            return result['output']
+        nexthops = cli_helper.xrcli_exec("show bgp nexthops")
+        prefixsets = cli_helper.xrcli_exec("show run prefix-set LU-allow-prefixes")
+        if nexthops['status'] == 'success' and prefixsets['status'] == 'success':
+            return {"nexthops": nexthops['output'], "prefixsets": prefixsets['output']}
         else:
             sys.exit("Error in executing show bgp nexthops")
     else:
