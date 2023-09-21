@@ -54,7 +54,6 @@ def generateApplyConfig(prefixList):
     prefixSet = "prefix-set LU-allow-prefixes \n"
     for ip in prefixList:
         prefixSet = prefixSet + ip + ","
-    print(prefixSet[:-1] + " end-set")
     return prefixSet[:-1] + " end-set"
 
 def commitApplyConfig(config):
@@ -65,7 +64,6 @@ def commitApplyConfig(config):
         print("Error in applying the prefix-set config")
 
 if __name__ == '__main__':
-
     ipList_LU = extractIP(getCLI()['nexthops'])
     old_PrefixList = extractPrefixSets(getCLI()['prefixsets'])
 
