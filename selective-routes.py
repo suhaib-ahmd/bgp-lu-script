@@ -50,8 +50,20 @@ def generatePrefixList(IPs):
         prefix_list.append(ip + "/32")
     return prefix_list 
 
-if __name__ == '__main__':
+def generateApplyConfig(prefixList):
+    prefixSet = "prefix-set LU-allow-prefixes \n"
+    for ip in prefixList:
+        prefixSet = prefixSet + ip + ","
+    return prefixSet[:-1] + " end-set"
 
+def commitApplyConfig(config):
+    r = cli_helper.xr_apply_config_string(config)
+    if r['status'] == 'success':
+        print("Successfully applied the prefix-set config")
+    else:
+        print("Error in applying the prefix-set config")
+
+if __name__ == '__main__':
     ipList_LU = extractIP(getCLI()['nexthops'])
     old_PrefixList = extractPrefixSets(getCLI()['prefixsets'])
 
@@ -63,3 +75,8 @@ if __name__ == '__main__':
         print("Generating prefix-list")
         prefixList = list(set(generatePrefixList(ipList_LU) + old_PrefixList))
         print(prefixList)
+
+        prefixSet = generateApplyConfig(prefixList)
+
+        if test_flag == False:
+            commitApplyConfig(prefixSet)
