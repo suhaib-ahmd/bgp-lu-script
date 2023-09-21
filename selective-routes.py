@@ -50,6 +50,9 @@ def generatePrefixList(IPs):
         prefix_list.append(ip + "/32")
     return prefix_list 
 
+def generateApplyConfig():
+    pass
+
 if __name__ == '__main__':
 
     ipList_LU = extractIP(getCLI()['nexthops'])
