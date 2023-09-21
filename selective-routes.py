@@ -50,8 +50,12 @@ def generatePrefixList(IPs):
         prefix_list.append(ip + "/32")
     return prefix_list 
 
-def generateApplyConfig():
-    pass
+def generateApplyConfig(prefixList):
+    prefixSet = "prefix-set LU-allow-prefixes \n"
+    for ip in prefixList:
+        prefixSet = prefixSet + ip + ","
+    print(prefixSet[:-1] + " end-set")
+
 
 if __name__ == '__main__':
 
@@ -66,3 +70,6 @@ if __name__ == '__main__':
         print("Generating prefix-list")
         prefixList = list(set(generatePrefixList(ipList_LU) + old_PrefixList))
         print(prefixList)
+
+        generateApplyConfig(prefixList)
+
