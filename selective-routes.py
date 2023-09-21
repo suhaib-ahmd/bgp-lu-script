@@ -6,6 +6,7 @@ Test file bgp-lu-command-3.txt -> show bgp nexthops -> WITHOUT the LU route inst
 """
 import re
 test_flag = False
+import sys
 
 try:
     from cisco.script_mgmt import xrlog
@@ -21,8 +22,10 @@ def getCLI():
         result = cli_helper.xrcli_exec("show bgp nexthops")
         if result['status'] == 'success':
             return result['output']
+        else:
+            sys.exit("Error in executing show bgp nexthops")
     else:
-        return open('test-cli-outputs/bgp-lu-command-1.txt').read()
+        return open('test-cli-outputs/bgp-lu-command-3.txt').read()
 
 def extractIP(raw_cli_output):
     r = re.finditer(r'((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\s+\[UR\]', raw_cli_output) # Attempt to extract the IP address from the CLI output
