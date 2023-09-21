@@ -40,7 +40,7 @@ def extractIP(raw_cli_output):
     return IPs
 
 def extractPrefixSets(raw_cli_output):
-    r = re.finditerre.finditer(r'((25[0-5])\.|(2[0-4][0-9]\.)|(1[0-9][0-9]\.)|(\b[0-9][0-9]\.\b)|(\b[0-9]\.\b)){3}((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))/(\b3[0-2]\b|\b[1-2][0-9]\b|\b[0-9]\b)',raw_cli_output)
+    r = re.finditer(r'((25[0-5])\.|(2[0-4][0-9]\.)|(1[0-9][0-9]\.)|(\b[0-9][0-9]\.\b)|(\b[0-9]\.\b)){3}((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))/(\b3[0-2]\b|\b[1-2][0-9]\b|\b[0-9]\b)',raw_cli_output)
     IPs = [re.split(r'\s+', raw_cli_output[i.start():i.end()])[0] for i in r]
     return IPs
 
