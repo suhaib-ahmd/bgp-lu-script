@@ -25,27 +25,40 @@ def getCLI():
         else:
             sys.exit("Error in executing show bgp nexthops")
     else:
-        return open('test-cli-outputs/bgp-lu-command-3.txt').read()
-
+        f,g = open('test-cli-outputs/bgp-lu-command-4.txt'), open('test-cli-outputs/prefix-set-2.txt')
+        nexthops,prefixsets = f.read(),g.read()
+        f.close()
+        g.close()
+        return {"nexthops": nexthops, "prefixsets": prefixsets}
+"""
+TODO: Do in-depth testing of regex matching (any alphanumeric inputs for IP addresses)
+"""
 def extractIP(raw_cli_output):
     r = re.finditer(r'((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\s+\[UR\]', raw_cli_output) # Attempt to extract the IP address from the CLI output
-    ips = [re.split(r'\s+', raw_cli_output[i.start():i.end()])[0] for i in r]
-    return ips
+    IPs = [re.split(r'\s+', raw_cli_output[i.start():i.end()])[0] for i in r]
+    return IPs
 
-def generatePrefixList(ips):
+def extractPrefixSets(raw_cli_output):
+    r = re.finditer(r'((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))\.((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|(\b[0-9][0-9]\b)|(\b[0-9]\b))/(\b3[0-2]\b|\b[1-2][0-9]\b|\b[0-9]\b)',raw_cli_output)
+    IPs = [re.split(r'\s+', raw_cli_output[i.start():i.end()])[0] for i in r]
+    return IPs
+
+def generatePrefixList(IPs):
     prefix_list = []
-    for ip in ips:
+    for ip in IPs:
         prefix_list.append(ip + "/32")
-    return prefix_list
+    return prefix_list 
 
 if __name__ == '__main__':
-    #test_string = getCLI()
-    ipList = extractIP(getCLI())
-    if len(ipList) == 0:
-        print("No IP addresses found in the CLI output")
+
+    ipList_LU = extractIP(getCLI()['nexthops'])
+    old_PrefixList = extractPrefixSets(getCLI()['prefixsets'])
+
+    if len(ipList_LU) == 0:
+        print("No IP addresses found in the show bgp nexthops CLI output")
     else:
-        print("IP addresses found in the CLI output")
-        print(ipList)
+        print("IP addresses found in the show bgp next hops CLI output")
+        print(ipList_LU)
         print("Generating prefix-list")
-        print(generatePrefixList(ipList))
-    #print(extractIP(getCLI()))
+        prefixList = list(set(generatePrefixList(ipList_LU) + old_PrefixList))
+        print(prefixList)

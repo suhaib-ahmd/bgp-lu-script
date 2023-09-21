@@ -1,0 +1,8 @@
+
+-------------------- show run prefix-set LU-allow-prefixes --------------------
+prefix-set LU-allow-prefixes
+  2.2.2.2/32,
+  3.3.3.3/32
+end-set
+!
+
