@@ -55,7 +55,14 @@ def generateApplyConfig(prefixList):
     for ip in prefixList:
         prefixSet = prefixSet + ip + ","
     print(prefixSet[:-1] + " end-set")
+    return prefixSet[:-1] + " end-set"
 
+def commitApplyConfig(config):
+    r = cli_helper.xr_apply_config_string(config)
+    if r['status'] == 'success':
+        print("Successfully applied the prefix-set config")
+    else:
+        print("Error in applying the prefix-set config")
 
 if __name__ == '__main__':
 
@@ -71,5 +78,7 @@ if __name__ == '__main__':
         prefixList = list(set(generatePrefixList(ipList_LU) + old_PrefixList))
         print(prefixList)
 
-        generateApplyConfig(prefixList)
+        prefixSet = generateApplyConfig(prefixList)
 
+        if test_flag == False:
+            commitApplyConfig(prefixSet)
